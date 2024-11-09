@@ -7,6 +7,8 @@ import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
 
 
+import "react-loading-skeleton/dist/skeleton.css"
+
 const inter = Inter({ subsets:['latin']})
 
 const geistSans = localFont({
