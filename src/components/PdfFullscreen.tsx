@@ -35,7 +35,7 @@ const PdfFullscreen = ({ fileUrl }:PdffullscreenProps) => {
             </DialogTrigger>
             <DialogContent className='max-w-7xl w-full'>
                 <SimpleBar autoHide={false}
-                className='max-h-[calc(100vh-10rm)] mt-6'
+                className='max-h-[calc(100vh-10rem)] mt-6'
                 >
                     <div ref={ref}>
             <Document loading = {
