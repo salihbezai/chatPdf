@@ -43,7 +43,6 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
             </p>
           </div>
         </div>
-      <ChatInput isDisabled/>
       </div>
     )
 
@@ -61,7 +60,6 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
           </p>
         </div>
       </div>
-    <ChatInput isDisabled/>
     </div>
   )
 
@@ -87,7 +85,6 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
           </Link>
         </div>
       </div>
-    <ChatInput isDisabled/>
     </div>
   )
 
@@ -99,7 +96,7 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
         <Messages/>
       </div>
 
-      <ChatInput/>
+      <ChatInput isDisabled/>
     </div>
   )
 }
