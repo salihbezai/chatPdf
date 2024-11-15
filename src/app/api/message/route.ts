@@ -4,7 +4,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextRequest } from "next/server";
 
 export const POST = async (req:NextRequest)=>{
-    // endpont for asking a question to a pdf file
+    // endpoint for asking a question to a pdf file
     const body = await req.json();
 
     const { getUser } = getKindeServerSession()
