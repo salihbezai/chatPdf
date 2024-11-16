@@ -6,6 +6,7 @@ import { trpc } from '@/app/_trpc/client'
 import { ChevronLeft, Loader2, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import { buttonVariants } from '../ui/button'
+import { ChatContextProvider } from './ChatContext'
 
 interface ChatWrapperProps{
   fileId: string
@@ -27,7 +28,6 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
     }
   )
 
-
   if (isLoading)
     return (
       <div className='relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 
@@ -43,6 +43,7 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
             </p>
           </div>
         </div>
+        <ChatInput isDisabled />
       </div>
     )
 
@@ -60,10 +61,11 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
           </p>
         </div>
       </div>
+      <ChatInput isDisabled />
     </div>
   )
 
-  if(data?.status === "FAILED") return (
+if(data?.status === "FAILED") return (
     <div className='relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 
     flex-col justify-between gap-2'>
       <div className='flex-1 flex justify-center items-center flex-col mb-28'>
@@ -85,19 +87,23 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
           </Link>
         </div>
       </div>
+      <ChatInput isDisabled />
     </div>
   )
 
   
   return (
+    <ChatContextProvider fileId={fileId}>
     <div className='relative min-h-full bg-zinc-50 flex divide-y
     divide-zinc-200 flex-col justify-between gap-2'>
       <div className='flex-1 justify-between flex flex-col mb-28'>
-        <Messages/>
+        <Messages />
       </div>
 
       <ChatInput isDisabled/>
     </div>
+    </ChatContextProvider>
+
   )
 }
 

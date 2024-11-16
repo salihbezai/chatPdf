@@ -6,8 +6,8 @@ import { UploadThingError } from "uploadthing/server";
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { PineconeStore } from 'langchain/vectorstores/pinecone'
+
 import { getPineconeClient } from '@/lib/pinecone'
-import { SourceTextModule } from "vm";
 
 
 const f = createUploadthing();
@@ -53,6 +53,10 @@ export const ourFileRouter = {
           const loader = new PDFLoader(blob);
 
           const pageLevelDocs = await loader.load()
+          
+          console.log("pageLevelDocs:", pageLevelDocs);
+    console.log("Is pageLevelDocs an array?", Array.isArray(pageLevelDocs));
+
           /* if we consoel.log the pageLevelDocs
           we get soemthing like this 
           [
@@ -73,63 +77,41 @@ export const ourFileRouter = {
           const pagesAmt = pageLevelDocs.length
           
 
-          // vectorize and index entire document
-          console.log("creating pinecone")
-          const youu = await getPineconeClient();
-const nooo = youu.Index('chatpdf'); // Create or get the 'quill' index
+           // vectorize and index entire document
+    const pinecone = await getPineconeClient()
+    const pineconeIndex = pinecone.Index('quill')
 
-console.log("Pinecone index created:", nooo);
+    const embeddings = new OpenAIEmbeddings({
+      openAIApiKey: process.env.OPENAI_API_KEY,
+    })
 
-// Continue with your other operations (e.g., PineconeStore, embeddings, etc.)
-
-
-
-
-
-
-
-
-
-
-
-        // vectorize and index entire document
-        const pinecone = await getPineconeClient()
-        console.log("thepincone oject "+pinecone)
-        const pineconeIndex = pinecone.Index('chatpdf')
-
-        const embeddings = new OpenAIEmbeddings({
-          openAIApiKey: process.env.OPENAI_API_KEY,
-        })
-
-        await PineconeStore.fromDocuments(
-          pageLevelDocs,
-          embeddings,
-          {
-            pineconeIndex,
-            namespace: createdFile.id,
-          }
-        )
-
-        await db.file.update({
-          data: {
-            uploadStatus: 'SUCCESS',
-          },
-          where: {
-            id: createdFile.id,
-          },
-  })
-} catch (err) {
-  console.log("something went wrong here "+err)
-  await db.file.update({
-    data: {
-      uploadStatus: 'FAILED',
-    },
-    where: {
-      id: createdFile.id,
-    },
-
-        })
+    await PineconeStore.fromDocuments(
+      pageLevelDocs,
+      embeddings,
+      {
+        pineconeIndex,
+        namespace: createdFile.id,
       }
+    )
+
+    await db.file.update({
+      data: {
+        uploadStatus: 'SUCCESS',
+      },
+      where: {
+        id: createdFile.id,
+      },
+    })
+  } catch (err) {
+    await db.file.update({
+      data: {
+        uploadStatus: 'FAILED',
+      },
+      where: {
+        id: createdFile.id,
+      },
+    })
+  }
     }),
 } satisfies FileRouter;
 
